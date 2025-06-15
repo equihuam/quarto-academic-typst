@@ -34,12 +34,12 @@ rm img/template-full-*.png
 If you would like to add the clean theme to an existing directory:
 
 ```{.bash}
-quarto install extension kazuyanagimoto/quarto-academic-typst
+quarto install extension equihuam/quarto-academic-typst
 ```
 
 or you can use a Quarto template that bundles a .qmd starter file:
 
 ```{.bash}
-quarto use template kazuyanagimoto/quarto-academic-typst
-```
+quarto use template equihuam/quarto-academic-typst
+``` 
 
