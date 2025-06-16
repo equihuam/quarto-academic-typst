@@ -26,27 +26,27 @@ format:
     bibliographystyle: "chicago-author-date"
     include-in-header:
       - text: '#import "@preview/mitex:0.2.4": *'
-brand: 
-  typography:
-    fonts:
-      - family: Jost
-        source: google
-        weight: [100, 200, 300, 400, 500, 600, 700, 800, 900]
-      - family: Libertinus Serif
-        source: file
-        files:
-          - path: static/fonts/Libertinus-7.051/static/OTF/LibertinusSerif-Regular.otf
-          - path: static/fonts/Libertinus-7.051/static/OTF/LibertinusSerif-Italic.otf
-            style: italic
-      - family: Libertinus Math
-        source: file
-        files:
-          - path: static/fonts/Libertinus-7.051/static/OTF/LibertinusMath-Regular.otf
-    base: Libertinus Serif
-    headings: Jost
-  defaults:
-    academic-typst:
-      mathfont: Libertinus Math
+#brand: 
+#  typography:
+#    fonts:
+#      - family: Jost
+#        source: google
+#        weight: [100, 200, 300, 400, 500, 600, 700, 800, 900]
+#      - family: Libertinus Serif
+#        source: file
+#        files:
+#          - path: static/fonts/Libertinus-7.051/static/OTF/LibertinusSerif-Regular.otf
+#          - path: static/fonts/Libertinus-7.051/static/OTF/LibertinusSerif-Italic.otf
+#            style: italic
+#      - family: Libertinus Math
+#        source: file
+#        files:
+#          - path: static/fonts/Libertinus-7.051/static/OTF/LibertinusMath-Regular.otf
+#    base: Libertinus Serif
+#    headings: Jost
+#  defaults:
+#    academic-typst:
+#      mathfont: Libertinus Math
 execute: 
   echo: false
   warning: false
@@ -58,6 +58,8 @@ The code is available [here](https://kazuyanagimoto.com/quarto-academic-typst/te
 
 ```{r}
 #| label: setup
+
+library(palmerpenguins)
 library(dplyr)
 library(ggplot2)
 library(patchwork)
@@ -75,7 +77,7 @@ font_base_light <- "Roboto Condensed Light"
 # font_add_google(font_base_regular, font_base_light)
 showtext_auto()
 
-theme_quarto <- function(
+theme_quarto <- function(  
   font_title = font_base_regular,
   font_text = font_base_light,
   size_base = 11
@@ -179,17 +181,25 @@ As a caption of the figure (`fig-cap`), I use bold text for the title and use a 
 #| fig-cap: |
 #|   **Flipper Length and Bill Length of Penguins**.
 #|   The x-axis shows the flipper length, and the y-axis shows the bill length.
+#| warning: false 
 
-penguins |>
-  filter(!is.na(sex)) |>
-  mutate(
+
+penguins <- palmerpenguins::penguins |>
+  rename(flipper_len = "flipper_length_mm", 
+         bill_len = "bill_length_mm",
+         bill_dep = "bill_depth_mm",
+         body_mass = "body_mass_g")
+  
+penguins |> 
+   filter(!is.na(sex)) |>
+   mutate(
     lbl_facet = recode_factor(sex, `male` = "Male", `female` = "Female")
   ) |>
   ggplot(aes(
     x = flipper_len,
     y = bill_len,
     color = species,
-    shape = species
+    shape = species      
   )) +
   geom_point(size = 2) +
   geom_smooth(method = "lm", se = FALSE) +
@@ -197,7 +207,7 @@ penguins |>
   facet_wrap(~lbl_facet) +
   labs(x = "Flipper Length (mm)", y = "Bill Length (mm)") +
   theme_quarto() +
-  theme(legend.position = c(0.9, 0.1))
+  theme(legend.position.inside  = c(0.9, 0.1))
 ```
 
 When I want to show multiple figures side by side, I use the `patchwork` package.
